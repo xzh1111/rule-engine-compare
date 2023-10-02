@@ -9,7 +9,7 @@ This repository aims to test and compare the performance of different rule engin
 Clone this repository to your local machine:
 
 ```
-git clone https://github.com/your-username/rule-engine-compare.git
+git clone https://github.com/xzh1111/rule-engine-compare.git
 ```
 
 In the benchmarks/ directory, we provide code and results for performance testing. You can follow these steps to run the performance tests:
