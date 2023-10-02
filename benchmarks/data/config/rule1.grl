@@ -1,0 +1,44 @@
+rule  BaseItierRule1  "ItierRule1"  salience 10 {
+	when
+	   UserFact.Itier == 20 
+	Then
+	   UserFact.Result="1";
+	   Complete();
+	}
+rule  BaseRoundNoRule1  "RoundNoRule1"  salience 9 {
+	when
+		UserFact.RoundNo == 1 && ( UserFact.Itier == 8 || UserFact.Itier == 12 )
+	Then
+		UserFact.Result="1";
+		Complete();
+	}
+rule  GetPlayOneAgain  "GetPlayOneAgain"  salience 8 {
+	when
+		UserFact.RoundNo == 1 && UserFact.Itier != 8 && UserFact.Itier != 12 && UserFact.UserKey =="noplayone"
+	Then
+		UserFact.PlayOneAgain = false;
+		Changed("UserFact.PlayOneAgain");
+		Retract("GetPlayOneAgain");
+	}
+rule  BaseRoundNoRule3  "RoundNoRule3"  salience 7 {
+	when
+		UserFact.RoundNo == 1 && UserFact.Itier != 8 && UserFact.Itier != 12 && UserFact.PlayOneAgain == true
+	Then
+		UserFact.Result="1";
+		Complete();
+	}
+rule  BaseRoundNoRule4  "RoundNoRule4"  salience 6 {
+	when
+		UserFact.RoundNo == 1  && UserFact.Itier != 8 && UserFact.Itier != 12 && 
+		UserFact.PlayOneAgain == false
+	Then
+		UserFact.Result="2";
+		Complete();
+	}
+rule  BaseRoundNoRule5  "RoundNoRule5"  salience 5 {
+	when
+		UserFact.RoundNo <= 5
+	Then
+		UserFact.Result="3";
+		Complete();
+	}
