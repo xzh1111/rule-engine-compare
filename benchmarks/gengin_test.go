@@ -152,7 +152,7 @@ func BenchmarkGenginExecute(b *testing.B) {
 	// 创建测试上下文
 	ctx := context.Background()
 
-	knowRules := []string{"rule1.erl","rule2.erl"}
+	knowRules := []string{"rule1.erl", "rule2.erl"}
 	// 循环运行测试函数
 	for i := 0; i < b.N; i++ {
 		idx := rand.Intn(len(ufs))
@@ -166,25 +166,77 @@ func BenchmarkGenginExecute(b *testing.B) {
 	}
 }
 
-
 func TestGenginExecute(t *testing.T) {
 	type args struct {
 		ctx           context.Context
 		facts         map[string]interface{}
 		KnowledgeName string
 	}
+	err := cengine.SyncRules(cengine.LoadGenginRules)
+	assert.Equal(t, err, nil)
+	//stag := &engine.Stag{StopTag: false}
 	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
+		name       string
+		args       args
+		wantErr    bool
+		wantResult string
+		wantUf     *UserFact
 	}{
-		// TODO: Add test cases.
+		{
+			name: "gengin-playone",
+			args: args{
+				ctx: context.Background(),
+				facts: map[string]interface{}{
+					"UserFact": &UserFact{
+						UserKey: "playone",
+						Itier:   16,
+						RoundNo: 1,
+						Result:  "-1",
+					},
+				},
+				KnowledgeName: "rule1.erl",
+			},
+			wantErr: false,
+			wantUf: &UserFact{
+				UserKey:      "playone",
+				Itier:        16,
+				RoundNo:      1,
+				Result:       "3",
+				PlayOneAgain: true,
+			},
+		},{
+			name: "gengin-noplayone",
+			args: args{
+				ctx: context.Background(),
+				facts: map[string]interface{}{
+					"UserFact": &UserFact{
+						UserKey: "noplayone",
+						Itier:   16,
+						RoundNo: 1,
+						Result:  "-1",
+					},
+				},
+				KnowledgeName: "rule2.erl",
+			},
+			wantErr: false,
+			wantUf: &UserFact{
+				UserKey:      "noplayone",
+				Itier:        16,
+				RoundNo:      1,
+				Result:       "4",
+				PlayOneAgain: false,
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := cengine.GenginExecute(tt.args.ctx, tt.args.facts, tt.args.KnowledgeName); (err != nil) != tt.wantErr {
 				t.Errorf("GenginExecute() error = %v, wantErr %v", err, tt.wantErr)
+			} else {
+				uf := tt.args.facts["UserFact"].(*UserFact)
+				assert.Equal(t, tt.wantUf, uf)
 			}
+
 		})
 	}
 }
