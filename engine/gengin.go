@@ -30,8 +30,9 @@ func AddApiOuter(name string, api interface{}) error {
 
 func init() {
 	apiOuters := map[string]interface{}{
+		"Printf":         fmt.Printf,
 		"Println":        fmt.Println,
-		"Now":            time.Now(),
+		"Now":            time.Now,
 		"StringContains": strings.Contains,
 		"Abs":            math.Abs,
 		"MathLog":        math.Log,
