@@ -29,6 +29,14 @@ func AddApiOuter(name string, api interface{}) error {
 	return nil
 }
 
+func SliceLen(s []string) int {
+	return len(s)
+}
+
+func StringLen(s string) int {
+	return len(s)
+}
+
 func init() {
 	apiOuters := map[string]interface{}{
 		"Sprintf":        fmt.Sprintf,
@@ -48,6 +56,9 @@ func init() {
 		"StringContains": strings.Contains,
 		"Atoi":           strconv.Atoi,
 		"Itoa":           strconv.Itoa,
+		"StringSplit":    strings.Split,
+		"SliceLen":       SliceLen,
+		"StringLen":      StringLen,
 	}
 
 	AddApiOuters(apiOuters)

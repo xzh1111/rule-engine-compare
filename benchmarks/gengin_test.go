@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"strings"
 	"testing"
 
 	"github.com/cookedsteak/gengine/engine"
@@ -17,6 +18,10 @@ rule "1" "1"
 begin
 	resp.At = room.GetAttention()
 	println("rule 1...")
+	items = Split(room.OriginStr(), "|")
+	if SliceLen(items) == 3 {
+		Printf("items: %+v ",items)
+	}
 end 
 
 rule "2" "2"
@@ -62,6 +67,11 @@ func (r *Room) GetNum( /*params*/ ) int64 {
 	return 111
 }
 
+func (r *Room) OriginStr( /*params*/ ) string {
+	//logic
+	return "11|22|33"
+}
+
 //初始化业务服务
 //apiOuter这里最好仅注入一些无状态函数，方便应用中的状态管理
 func NewMyService(poolMinLen, poolMaxLen int64, em int, rulesStr string, apiOuter map[string]interface{}) *MyService {
@@ -98,6 +108,19 @@ func (ms *MyService) Service(req *Request) (*Response, error) {
 	return resp, nil
 }
 
+func Printf(format string, a ...any) {
+	fmt.Printf(format, a...)
+	fmt.Print("\n")
+}
+
+func SliceLen(s []string) int {
+	return len(s)
+}
+
+func StringLen(s string) int {
+	return len(s)
+}
+
 //模拟调用
 func Test_run(t *testing.T) {
 
@@ -105,6 +128,9 @@ func Test_run(t *testing.T) {
 	//注入api，请确保注入的API属于并发安全
 	apis := make(map[string]interface{})
 	apis["println"] = fmt.Println
+	apis["Printf"] = Printf
+	apis["Split"] = strings.Split
+	apis["SliceLen"] = SliceLen
 	msr := NewMyService(10, 20, 1, service_rules, apis)
 
 	//调用
@@ -204,7 +230,7 @@ func TestGenginExecute(t *testing.T) {
 				Result:       "3",
 				PlayOneAgain: true,
 			},
-		},{
+		}, {
 			name: "gengin-noplayone",
 			args: args{
 				ctx: context.Background(),
