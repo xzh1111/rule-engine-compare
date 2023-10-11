@@ -1,6 +1,6 @@
 module github.com/xzh1111/rule-engine-compare
 
-go 1.21.0
+go 1.20
 
 require (
 	github.com/cookedsteak/gengine v1.6.2

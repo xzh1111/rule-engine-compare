@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"log/slog"
 	"strconv"
 	"sync"
 
@@ -68,7 +67,7 @@ func GruleExecute(ctx context.Context, facts map[string]interface{}, KnowledgeNa
 	for k, v := range facts {
 		err = dataCtx.Add(k, v)
 		if err != nil {
-			slog.Error("DataContext, Add %s fact failed , error: %v\n", k, err)
+			log.Printf("DataContext, Add %s fact failed , error: %v\n", k, err)
 			return err
 		}
 	}
