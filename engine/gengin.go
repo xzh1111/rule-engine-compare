@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -30,10 +31,10 @@ func AddApiOuter(name string, api interface{}) error {
 
 func init() {
 	apiOuters := map[string]interface{}{
+		"Sprintf":        fmt.Sprintf,
 		"Printf":         fmt.Printf,
 		"Println":        fmt.Println,
 		"Now":            time.Now,
-		"StringContains": strings.Contains,
 		"Abs":            math.Abs,
 		"MathLog":        math.Log,
 		"Log10":          math.Log10,
@@ -43,6 +44,10 @@ func init() {
 		"Pow":            math.Pow,
 		"Pow10":          math.Pow10,
 		"Round":          math.Round,
+		"ToLower":        strings.ToLower,
+		"StringContains": strings.Contains,
+		"Atoi":           strconv.Atoi,
+		"Itoa":           strconv.Itoa,
 	}
 
 	AddApiOuters(apiOuters)
