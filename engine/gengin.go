@@ -68,6 +68,18 @@ func FindRange(val float64, ranges ...int64) []int64 {
 	return []int64{}
 }
 
+func ParseFloat(s string, dft float64) float64 {
+	rst, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		rst = dft
+	}
+	return rst
+}
+
+func Int2Float(v int) float64 {
+	return float64(v)
+}
+
 var sugar *zap.SugaredLogger
 
 func init() {
@@ -83,8 +95,6 @@ func init() {
 	logger, _ := config.Build()
 	sugar = logger.Sugar()
 	apiOuters := map[string]interface{}{
-		"ZapLogf":        sugar.Infof,
-		"Len":            Len,
 		"Sprintf":        fmt.Sprintf,
 		"Printf":         Printf,
 		"Println":        fmt.Println,
@@ -106,6 +116,10 @@ func init() {
 		"SliceLen":       SliceLen,
 		"StringLen":      StringLen,
 		"FindRange":      FindRange,
+		"ParseFloat":     ParseFloat,
+		"Int2Float":      Int2Float,
+		"ZapLogf":        sugar.Infof,
+		"Len":            Len,
 	}
 
 	AddApiOuters(apiOuters)
@@ -150,6 +164,9 @@ func GenginExecute(ctx context.Context, facts map[string]interface{}, KnowledgeN
 	if !ok {
 		return fmt.Errorf("KnowledgeBase %s not found", KnowledgeName)
 	} else {
+		if pool == nil {
+			return fmt.Errorf("KnowledgeBase %s pool is nil", KnowledgeName)
+		}
 		err, _ = pool.Execute(facts, false)
 	}
 

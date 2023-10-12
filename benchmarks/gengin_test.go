@@ -27,6 +27,14 @@ begin
 	if Len(index) == 2 {
 		Printf("index: %+v ",index)
 	}
+	fl = Int2Float(2)
+	Printf("fl: %+v ",fl)
+	dv = 2/1.5
+	Printf("dv: %+v ",dv)
+	mt = 2.0*1.5
+	Printf("mt: %+v ",mt)
+	
+	Printf("customNum: %+v ",customNum)
 end 
 
 rule "2" "2"
@@ -103,6 +111,8 @@ func (ms *MyService) Service(req *Request) (*Response, error) {
 	room := &Room{}
 	data["room"] = room
 
+	data["customNum"] = 100
+
 	//
 	e, _ := ms.Pool.ExecuteSelectedRules(data, req.RuleNames)
 	if e != nil {
@@ -138,6 +148,7 @@ func Test_run(t *testing.T) {
 	apis["FindRange"] = cengine.FindRange
 	apis["SliceLen"] = SliceLen
 	apis["Len"] = cengine.Len
+	apis["Int2Float"] = cengine.Int2Float
 	msr := NewMyService(10, 20, 1, service_rules, apis)
 
 	//调用
