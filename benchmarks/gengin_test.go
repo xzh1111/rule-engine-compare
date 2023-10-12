@@ -22,6 +22,11 @@ begin
 	if SliceLen(items) == 3 {
 		Printf("items: %+v ",items)
 	}
+
+	index = FindRange(-1, -99999, -2, -1, 0, 1, 2, 99999)
+	if Len(index) == 2 {
+		Printf("index: %+v ",index)
+	}
 end 
 
 rule "2" "2"
@@ -130,7 +135,9 @@ func Test_run(t *testing.T) {
 	apis["println"] = fmt.Println
 	apis["Printf"] = Printf
 	apis["Split"] = strings.Split
+	apis["FindRange"] = cengine.FindRange
 	apis["SliceLen"] = SliceLen
+	apis["Len"] = cengine.Len
 	msr := NewMyService(10, 20, 1, service_rules, apis)
 
 	//调用

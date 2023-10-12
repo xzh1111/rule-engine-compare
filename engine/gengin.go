@@ -6,11 +6,14 @@ import (
 	"log"
 	"math"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/cookedsteak/gengine/engine"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 var genginPoolMap map[string]*engine.GenginePool = make(map[string]*engine.GenginePool)
@@ -29,6 +32,11 @@ func AddApiOuter(name string, api interface{}) error {
 	return nil
 }
 
+func Printf(format string, a ...any) {
+	fmt.Printf(format, a...)
+	fmt.Print("\n")
+}
+
 func SliceLen(s []string) int {
 	return len(s)
 }
@@ -37,10 +45,48 @@ func StringLen(s string) int {
 	return len(s)
 }
 
+func Len(i interface{}) int {
+	v := reflect.ValueOf(i)
+
+	switch v.Kind() {
+	case reflect.String:
+		return len(v.String())
+	case reflect.Slice:
+		return v.Len()
+	default:
+		fmt.Printf("customLen does not support this type: %s\n", v.Kind())
+		return -1
+	}
+}
+
+func FindRange(val float64, ranges ...int64) []int64 {
+	for i := 0; i < len(ranges)-1; i++ {
+		if float64(ranges[i]) < val && val <= float64(ranges[i+1]) {
+			return []int64{ranges[i], ranges[i+1]}
+		}
+	}
+	return []int64{}
+}
+
+var sugar *zap.SugaredLogger
+
 func init() {
+	config := zap.Config{
+		Encoding:         "console",
+		Level:            zap.NewAtomicLevelAt(zap.InfoLevel),
+		OutputPaths:      []string{"stderr"},
+		ErrorOutputPaths: []string{"stderr"},
+		EncoderConfig: zapcore.EncoderConfig{
+			EncodeTime: zapcore.ISO8601TimeEncoder,
+		},
+	}
+	logger, _ := config.Build()
+	sugar = logger.Sugar()
 	apiOuters := map[string]interface{}{
+		"ZapLogf":        sugar.Infof,
+		"Len":            Len,
 		"Sprintf":        fmt.Sprintf,
-		"Printf":         fmt.Printf,
+		"Printf":         Printf,
 		"Println":        fmt.Println,
 		"Now":            time.Now,
 		"Abs":            math.Abs,
@@ -59,6 +105,7 @@ func init() {
 		"StringSplit":    strings.Split,
 		"SliceLen":       SliceLen,
 		"StringLen":      StringLen,
+		"FindRange":      FindRange,
 	}
 
 	AddApiOuters(apiOuters)

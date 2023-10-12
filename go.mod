@@ -6,6 +6,7 @@ require (
 	github.com/cookedsteak/gengine v1.6.2
 	github.com/hyperjumptech/grule-rule-engine v1.14.1
 	github.com/stretchr/testify v1.8.4
+	go.uber.org/zap v1.25.0
 )
 
 require (
@@ -28,7 +29,6 @@ require (
 	github.com/src-d/gcfg v1.4.0 // indirect
 	github.com/xanzy/ssh-agent v0.2.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	go.uber.org/zap v1.25.0 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc // indirect
 	golang.org/x/net v0.7.0 // indirect
