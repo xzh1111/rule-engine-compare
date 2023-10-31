@@ -99,6 +99,7 @@ func init() {
 		"Printf":         Printf,
 		"Println":        fmt.Println,
 		"Now":            time.Now,
+		"GetTimeStamp":   GetTimeStamp,
 		"Abs":            math.Abs,
 		"MathLog":        math.Log,
 		"Log10":          math.Log10,
@@ -171,4 +172,8 @@ func GenginExecute(ctx context.Context, facts map[string]interface{}, KnowledgeN
 	}
 
 	return err
+}
+
+func GetTimeStamp() string {
+	return time.Now().Format("2006-01-02 15:04:05")
 }
